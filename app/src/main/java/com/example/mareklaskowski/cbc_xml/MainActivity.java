@@ -27,6 +27,21 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
+        //fill these placeholders later for more functionality
+        //called by the framework, periodically, to provide updates on how the task is progressing
+        protected void onProgressUpdate(Integer... progress){
+            System.out.println("progress: "+ progress[0]);
+        }
+        //called by the framework once the task finishes
+        protected void onPostExecute(Long result){
+            //once finished all we do here is print out the headlines
+            //you will extend this to refresh any views (if necessary)
+            System.out.println("Downloaded "+ result + " files");
+            for(String headline: headlines){ //for each headline in headlines
+                System.out.println("Headline: " + headline);
+            }
+        }
     }
 
     @Override
@@ -44,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         //use a custom AsyncTask to download and process the xml resource
         new DownloadFilesTask().execute(url);
-        
+
     }
     //TODO: finish this method!
     public long downloadFile(URL url){
