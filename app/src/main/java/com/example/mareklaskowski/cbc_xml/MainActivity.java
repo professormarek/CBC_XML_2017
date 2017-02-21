@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         //declare a URL object used to point to the xml resource
         URL url = null;
         try{
-            url = new URL("http://www.cbc.ca/cmlink/rss-topstories.xml");
+            url = new URL("http://www.cbc.ca/cmlink/rss-topstories");
         }catch (Exception e){
             Log.d("An exception happened", e.getMessage());
         }
