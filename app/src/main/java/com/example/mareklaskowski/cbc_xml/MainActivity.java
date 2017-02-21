@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
@@ -61,8 +64,26 @@ public class MainActivity extends AppCompatActivity {
         new DownloadFilesTask().execute(url);
 
     }
-    //TODO: finish this method!
+
     public long downloadFile(URL url){
-        return 0;
+
+        //download the file in a try-catch block
+        try{
+            //create a new http url connection
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            //do something with the data
+            InputStreamReader inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
+            //print out the xml for debugging purposes
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String inputLine = null;
+            //java one-liner to read a line and make sure it's not null (EOF)
+            while((inputLine = bufferedReader.readLine()) != null){
+                Log.d("headlines", inputLine);
+
+            }
+        }catch (Exception e){
+            Log.d("An exception happened", e.getMessage());
+        }
+        return 1;
     }
 }
