@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -74,12 +77,44 @@ public class MainActivity extends AppCompatActivity {
             //do something with the data
             InputStreamReader inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
             //print out the xml for debugging purposes
+            /*
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String inputLine = null;
             //java one-liner to read a line and make sure it's not null (EOF)
             while((inputLine = bufferedReader.readLine()) != null){
                 Log.d("headlines", inputLine);
 
+            }
+            */
+
+            //use the XML Pull parser to process the XML
+            //get an instance of XmlPullParserFactory - the factory will create an XmlPullParser for us
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            //configure the factory to create the parser we want
+            factory.setNamespaceAware(true);
+            //get an instance of XmlPullParser from the factory
+            XmlPullParser xpp = factory.newPullParser();
+            //tell the parser where to get its data from. Note: we can pass a variety of BufferedReader type classes here...
+            xpp.setInput(inputStreamReader);
+            //XmlPullParser communicates with your code using "Events"
+            int event = xpp.getEventType();
+            //loop to process elements until we reach end of file
+            while(event != XmlPullParser.END_DOCUMENT){
+                //process events!
+                if(event == XmlPullParser.START_DOCUMENT){ //called at start of document
+                    System.out.println("Reached the start of the document");
+                }else if(event == XmlPullParser.START_TAG){
+                    String tagName = xpp.getName();
+                    System.out.println("Reached the start of tag: " + tagName);
+                }else if(event == XmlPullParser.END_TAG){
+                    String tagName = xpp.getName();
+                    System.out.println("Reached the end of tag: " + tagName);
+                }else if(event == XmlPullParser.TEXT){
+                    String text = xpp.getText();
+                    System.out.println("Found text: " + text);
+                }
+                //dont forget to get the next event!
+                event = xpp.next();
             }
         }catch (Exception e){
             Log.d("An exception happened", e.getMessage());
